@@ -35,6 +35,9 @@ const BlogsPage: React.FC = () => {
         
         // Set menu buttons data (only active ones)
         const activeButtons = menuResponse.blogsMenuButtons.filter(button => button.is_active === 1);
+        console.log('Menu buttons response:', menuResponse);
+        console.log('Active buttons:', activeButtons);
+        console.log('First button redirect_url:', activeButtons[0]?.redirect_url);
         setMenuButtons(activeButtons);
         
         // Set categories data (only active ones)
@@ -55,8 +58,27 @@ const BlogsPage: React.FC = () => {
   }, []);
 
   const handleButtonClick = (redirectUrl: string) => {
+    console.log('handleButtonClick called with URL:', redirectUrl);
+    console.log('URL type:', typeof redirectUrl);
+    console.log('URL length:', redirectUrl?.length);
+    
     if (redirectUrl && redirectUrl !== '#') {
-      window.open(redirectUrl, '_blank', 'noopener,noreferrer');
+      console.log('Attempting to open URL:', redirectUrl);
+      try {
+        const result = window.open(redirectUrl, '_blank', 'noopener,noreferrer');
+        console.log('window.open result:', result);
+        if (!result) {
+          console.warn('window.open returned null - popup might be blocked');
+          // Fallback: try to navigate in same window
+          window.location.href = redirectUrl;
+        }
+      } catch (error) {
+        console.error('Error opening URL:', error);
+        // Fallback: try to navigate in same window
+        window.location.href = redirectUrl;
+      }
+    } else {
+      console.log('URL is empty or "#", not redirecting');
     }
   };
 
@@ -106,8 +128,12 @@ const BlogsPage: React.FC = () => {
               menuButtons.map((button) => (
                 <button
                   key={button.id}
-                  onClick={() => handleButtonClick(button.redirect_url)}
+                  onClick={() => {
+                    console.log('Button clicked:', button.name, 'URL:', button.redirect_url);
+                    handleButtonClick(button.redirect_url);
+                  }}
                   className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2 cursor-pointer"
+                  title={`Redirect to: ${button.redirect_url}`}
                 >
                   {button.name}
                 </button>

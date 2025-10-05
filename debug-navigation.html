@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Navigation</title>
+</head>
+<body>
+    <h1>Navigation Debug Test</h1>
+    
+    <button id="test-button-1" onclick="handleButtonClick('https://www.sunyaiashindi.com/')">
+        Test Menu 1 (window.open)
+    </button>
+    
+    <button id="test-button-2" onclick="handleButtonClick2('https://www.sunyaiashindi.com/')">
+        Test Menu 2 (window.location)
+    </button>
+    
+    <button id="test-button-3" onclick="handleButtonClick3('https://www.sunyaiashindi.com/')">
+        Test Menu 3 (location.href)
+    </button>
+
+    <div id="debug-info"></div>
+
+    <script>
+        // Method 1: Using window.open (same as your current code)
+        function handleButtonClick(redirectUrl) {
+            console.log('handleButtonClick called with:', redirectUrl);
+            if (redirectUrl && redirectUrl !== '#') {
+                console.log('Opening URL:', redirectUrl);
+                const result = window.open(redirectUrl, '_blank', 'noopener,noreferrer');
+                console.log('window.open result:', result);
+                document.getElementById('debug-info').innerHTML += `<p>Method 1 - window.open called with: ${redirectUrl}</p>`;
+            }
+        }
+
+        // Method 2: Using window.location (new tab)
+        function handleButtonClick2(redirectUrl) {
+            console.log('handleButtonClick2 called with:', redirectUrl);
+            if (redirectUrl && redirectUrl !== '#') {
+                console.log('Redirecting to:', redirectUrl);
+                window.location.href = redirectUrl;
+                document.getElementById('debug-info').innerHTML += `<p>Method 2 - window.location called with: ${redirectUrl}</p>`;
+            }
+        }
+
+        // Method 3: Using location.href
+        function handleButtonClick3(redirectUrl) {
+            console.log('handleButtonClick3 called with:', redirectUrl);
+            if (redirectUrl && redirectUrl !== '#') {
+                console.log('Setting location.href to:', redirectUrl);
+                location.href = redirectUrl;
+                document.getElementById('debug-info').innerHTML += `<p>Method 3 - location.href called with: ${redirectUrl}</p>`;
+            }
+        }
+
+        // Test the API data structure
+        const testApiResponse = {
+            "blogsMenuButtons": [
+                {
+                    "id": 1,
+                    "name": "Menu 1",
+                    "redirect_url": "https://www.sunyaiashindi.com/",
+                    "is_active": 1,
+                    "created_at": "2025-10-05T09:11:23.067Z",
+                    "updated_at": "2025-10-05T09:11:23.067Z"
+                }
+            ],
+            "status": 200
+        };
+
+        console.log('Test API Response:', testApiResponse);
+        console.log('First button redirect_url:', testApiResponse.blogsMenuButtons[0].redirect_url);
+    </script>
+</body>
+</html>
