@@ -160,3 +160,20 @@ export interface SingleArticleResponse {
   blogsArticle: SingleBlogArticle;
   status: number;
 }
+
+// Coaching Center Types
+export interface CoachingCenter {
+  id: number;
+  city: string;
+  address: string;
+  mapLink: string;
+  mobileNo: string;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CoachingCentersResponse {
+  coachingCenters: CoachingCenter[];
+  status: number;
+}

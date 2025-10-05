@@ -35,31 +35,30 @@ function Navbar() {
       style={{ fontFamily: "Poppins-Medium, sans-serif" }}
     >
       {/* Top Row */}
-      <div className="border-b border-gray-100 py-2">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16">
+      <div className="border-b border-gray-100 py-2 sm:py-3">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-12 sm:h-14 md:h-16">
             {/* Logo */}
-            <div className="flex items-center">
+            <div className="flex items-center flex-shrink-0">
               <Link href="/" className="flex items-center">
                 <Image
                   src="/logo.svg"
                   alt="Sunya IAS Logo"
                   width={120}
                   height={40}
-                  className="h-10 w-auto"
+                  className="h-8 sm:h-9 md:h-10 w-auto"
                   priority
                 />
               </Link>
             </div>
 
-            {/* Top Navigation Links - Desktop */}
-            <div className="hidden lg:flex items-center space-x-8 ml-16 flex-1 justify-center">
+            {/* Top Navigation Links - Desktop & Tablet */}
+            <div className="hidden md:flex items-center space-x-4 lg:space-x-8 flex-1 justify-center ml-4 lg:ml-16">
               {topNavLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-[#AA1650] hover:text-[#AA1650] px-3 py-2 text-base font-medium relative group transition-colors duration-200"
-                  style={{ fontSize: '16px' }}
+                  className="text-[#AA1650] hover:text-[#AA1650] px-2 lg:px-3 py-2 text-sm lg:text-base font-medium relative group transition-colors duration-200 whitespace-nowrap"
                 >
                   {link.label}
                   <span className="absolute left-0 right-0 bottom-0 h-1 bg-[#FBC158] rounded-2xl scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
@@ -88,18 +87,18 @@ function Navbar() {
             </div> */}
 
             {/* Mobile menu button */}
-            <div className="lg:hidden">
+            <div className="md:hidden flex items-center">
               <button
                 onClick={toggleMenu}
                 type="button"
-                className="bg-[#FFFFFF] inline-flex items-center justify-center p-2 rounded-md text-[#AA1650] hover:text-[#AA1650] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#FBC158]"
+                className="bg-[#FFFFFF] inline-flex items-center justify-center p-2 rounded-md text-[#AA1650] hover:text-[#AA1650] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#FBC158] transition-colors duration-200"
                 aria-controls="mobile-menu"
-                aria-expanded="false"
+                aria-expanded={isMenuOpen}
               >
                 <span className="sr-only">Open main menu</span>
                 {/* Hamburger icon */}
                 <svg
-                  className={`${isMenuOpen ? "hidden" : "block"} h-6 w-6`}
+                  className={`${isMenuOpen ? "hidden" : "block"} h-5 w-5 sm:h-6 sm:w-6`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -115,7 +114,7 @@ function Navbar() {
                 </svg>
                 {/* Close icon */}
                 <svg
-                  className={`${isMenuOpen ? "block" : "hidden"} h-6 w-6`}
+                  className={`${isMenuOpen ? "block" : "hidden"} h-5 w-5 sm:h-6 sm:w-6`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -154,18 +153,17 @@ function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`lg:hidden ${isMenuOpen ? "block" : "hidden"}`}
+        className={`md:hidden ${isMenuOpen ? "block" : "hidden"}`}
         id="mobile-menu"
       >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[#FFFFFF] shadow-lg border-t border-gray-200">
+        <div className="px-3 pt-3 pb-4 space-y-1 sm:px-4 bg-[#FFFFFF] shadow-lg border-t border-gray-200">
           <div className="pb-3 mb-3 border-b border-gray-200">
-            <p className="text-[#AA1650] font-medium text-base mb-2 px-3" style={{ fontSize: '16px' }}>Main Menu</p>
+            <p className="text-[#AA1650] font-medium text-base mb-3 px-2">Main Menu</p>
             {topNavLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-[#AA1650] hover:text-[#AA1650] hover:bg-gray-50 block px-3 py-2 text-base font-medium transition-colors duration-200"
-                style={{ fontSize: '16px' }}
+                className="text-[#AA1650] hover:text-[#AA1650] hover:bg-gray-50 block px-3 py-3 text-base font-medium transition-colors duration-200 rounded-md"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.label}

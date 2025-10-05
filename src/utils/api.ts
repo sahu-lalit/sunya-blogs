@@ -1,6 +1,6 @@
 // API utility functions for the Sunya IAS application
 import { API_ENDPOINTS } from './constants';
-import { BlogBannerResponse, MenuButtonsResponse, ApiCategoryResponse, ApiSubcategoryResponse, ApiBlogArticlesResponse, ApiBlogArticle, Blog, SingleArticleResponse } from '../types/blog';
+import { BlogBannerResponse, MenuButtonsResponse, ApiCategoryResponse, ApiSubcategoryResponse, ApiBlogArticlesResponse, ApiBlogArticle, Blog, SingleArticleResponse, CoachingCentersResponse } from '../types/blog';
 
 interface SubscriptionEnquiryForm {
   name: string;
@@ -269,5 +269,60 @@ export async function fetchSingleBlogArticle(articleId: number): Promise<SingleA
     console.error('Error fetching single blog article:', error);
     // Return fallback data in case of error
     throw error;
+  }
+}
+
+// Fetch coaching centers
+export async function fetchCoachingCenters(): Promise<CoachingCentersResponse> {
+  try {
+    const response = await fetch(API_ENDPOINTS.COACHING_CENTERS, {
+      method: 'GET',
+      headers: {}
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data: CoachingCentersResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching coaching centers:', error);
+    // Return fallback data in case of error
+    return {
+      coachingCenters: [
+        {
+          id: 1,
+          city: 'Delhi',
+          address: '56/3, Bada Bazar, Old Rajinder Nagar, New Delhi – 110060',
+          mobileNo: '8279688595',
+          mapLink: 'https://goo.gl/maps/g2Zzpw9zGTUXfueU8',
+          is_active: 1,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          city: 'Bengaluru',
+          address: '80 Feet Rd. above bank of Baroda, behind Chandragiri Palace, 2nd Block, Nagarbhavi 1st Stage. Chandra Layout, circle, Bengaluru, Karnataka 560040',
+          mobileNo: '9611212771',
+          mapLink: 'https://maps.app.goo.gl/8hNNY3cSUPrkotrF8',
+          is_active: 1,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        {
+          id: 3,
+          city: 'Pune',
+          address: 'Adjacent to SVC cooperative Bank, Limaye wadi, Sadashiv Peth, Pune 411030',
+          mobileNo: '9205553486',
+          mapLink: 'https://www.google.com/maps/place/SUNYA+IAS/@18.5102477,73.8470972,15z/data=!4m6!3m5!1s0x3bc2c1caddd2e041:0x1c20e35694aed25b!8m2!3d18.5102477!4d73.8470972!16s%2Fg%2F11jsxy8rw5?entry=ttu&g_ep=EgoyMDI0MTAyOS4wIKXMDSoASAFQAw%3D%3D',
+          is_active: 1,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      ],
+      status: 200
+    };
   }
 }

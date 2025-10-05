@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   BLOGS_SUBCATEGORIES: `${API_BASE_URL}/blogs/sub-category`,
   BLOGS_ARTICLES: `${API_BASE_URL}/blogs/article`,
   SINGLE_BLOG_ARTICLE: `${API_BASE_URL}/blogs/article`,
+  COACHING_CENTERS: `${API_BASE_URL}/blogs/coaching-center`,
   // Add other endpoints here as needed
 } as const;
 

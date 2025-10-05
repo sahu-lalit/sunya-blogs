@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   FaEnvelope,
@@ -17,8 +17,9 @@ import {
   FaUndoAlt,
 } from "react-icons/fa";
 
-import { sendSubscriptionEnquiry } from "../../utils/api";
+import { sendSubscriptionEnquiry, fetchCoachingCenters } from "../../utils/api";
 import { useToast } from "../../context/ToastContext";
+import { CoachingCenter } from "../../types/blog";
 
 function SubscriptionEnquiryForm() {
   const { showToast } = useToast();
@@ -88,6 +89,38 @@ function SubscriptionEnquiryForm() {
 }
 
 function Footer() {
+  const { showToast } = useToast();
+  const [coachingCenters, setCoachingCenters] = useState<CoachingCenter[]>([]);
+  const [loadingCenters, setLoadingCenters] = useState(true);
+
+  useEffect(() => {
+    const loadCoachingCenters = async () => {
+      try {
+        setLoadingCenters(true);
+        const response = await fetchCoachingCenters();
+        if (response.status === 200) {
+          setCoachingCenters(response.coachingCenters.filter(center => center.is_active === 1));
+        }
+      } catch (error) {
+        console.error('Failed to load coaching centers:', error);
+        // Try to get fallback data from the API function
+        try {
+          const fallbackResponse = await fetchCoachingCenters();
+          if (fallbackResponse.status === 200) {
+            setCoachingCenters(fallbackResponse.coachingCenters.filter(center => center.is_active === 1));
+          }
+        } catch (fallbackError) {
+          console.error('Fallback also failed:', fallbackError);
+          showToast('Unable to load coaching center information.', 'error');
+        }
+      } finally {
+        setLoadingCenters(false);
+      }
+    };
+
+    loadCoachingCenters();
+  }, []);
+
   return (
     <footer className="bg-pink-700 text-white">
       {/* Top Section */}
@@ -176,12 +209,12 @@ function Footer() {
 
           {/* Speak to our admission team */}
           <div>
-            <h3 className="text-lg font-bold mb-6 pb-2 border-b border-pink-600">Speak to our admission team</h3>
+            {/* <h3 className="text-lg font-bold mb-6 pb-2 border-b border-pink-600">Speak to our admission team</h3>
             <p className="mb-4 text-pink-100">
               Please submit your details and our admission team will contact you soon.
-            </p>
+            </p> */}
             {/* Subscription Enquiry Form */}
-            <SubscriptionEnquiryForm />
+            {/* <SubscriptionEnquiryForm /> */}
             <div className="mt-6">
               <h4 className="text-sm font-semibold mb-3 text-pink-200">FOLLOW US</h4>
               <div className="flex gap-4">
@@ -213,56 +246,39 @@ function Footer() {
         <div className="container mx-auto">
           <h2 className="text-2xl font-bold text-center mb-8">Visit Our Centers</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                city: 'Delhi',
-                address: '56/3, Bada Bazar, Old Rajinder Nagar, New Delhi – 110060',
-                contact: '8279688595',
-                mapUrl: 'https://goo.gl/maps/g2Zzpw9zGTUXfueU8'
-              },
-              {
-                city: 'Bengaluru',
-                address: '80 Feet Rd. above bank of Baroda, behind Chandragiri Palace, 2nd Block, Nagarbhavi 1st Stage. Chandra Layout, circle, Bengaluru, Karnataka 560040',
-                contact: '9611212771',
-                mapUrl: 'https://maps.app.goo.gl/8hNNY3cSUPrkotrF8'
-              },
-              {
-                city: 'Pune',
-                address: 'Adjacent to SVC cooperative Bank, Limaye wadi, Sadashiv Peth, Pune 411030',
-                contact: '9205553486',
-                mapUrl: 'https://www.google.com/maps/place/SUNYA+IAS/@18.5102477,73.8470972,15z/data=!4m6!3m5!1s0x3bc2c1caddd2e041:0x1c20e35694aed25b!8m2!3d18.5102477!4d73.8470972!16s%2Fg%2F11jsxy8rw5?entry=ttu&g_ep=EgoyMDI0MTAyOS4wIKXMDSoASAFQAw%3D%3D'
-              },
-              {
-                city: 'Ahmedabad',
-                address: '112, A Ratna Business Center. Opp HK College, Ashram Road, Ahmedabad -380009',
-                contact: '9925986994',
-                mapUrl: 'https://www.google.com/maps/place/Sunya+IAS+Academy+-+Best+IAS+Coaching+in+Ahmedabad+UPSC+%26+GPSC+Coaching+Class+in+Ahmedabad+GPSC+English+medium%2F%E0%AA%97%E0%AB%81%E0%AA%9C%E0%AA%B0%E0%AA%BE%E0%AA%A4%E0%AB%80+%E0%AA%AE%E0%AA%BE%E0%AA%A7%E0%AB%8D%E0%AA%AF%E0%AA%AE/@23.0335784,72.5585274,15z/data=!4m6!3m5!1s0x395e8588b7a22fe7:0x54100a268092e168!8m2!3d23.0297117!4d72.5698482!16s%2Fg%2F11t_j12t_n?entry=ttu&g_ep=EgoyMDI0MTAyOS4wIKXMDSoASAFQAw%3D%3D'
-              },
-              {
-                city: 'Jammu',
-                address: '48 C/C, Greenbelt Park Gandhinagar Jammu, J&K 180004',
-                contact: '9205553481',
-                mapUrl: 'https://www.google.com/maps/place/WING+EK+UDAAN/@32.7075468,74.864534,15z/data=!4m6!3m5!1s0x391e85d438fa33d9:0x447d5e5355456a1b!8m2!3d32.7075468!4d74.864534!16s%2Fg%2F11qy681dtt?entry=ttu&g_ep=EgoyMDI0MTAyOS4wIKXMDSoASAFQAw%3D%3D'
-              },
-            ].map((location, index) => (
-              <div key={index} className="bg-pink-800 p-5 rounded-lg shadow-sm">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="bg-yellow-400 text-black px-3 py-1 rounded-full font-bold text-sm">
-                    #{location.city}
-                  </span>
+            {loadingCenters ? (
+              // Loading skeleton
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="bg-pink-800 p-5 rounded-lg shadow-sm animate-pulse">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="bg-pink-700 px-3 py-1 rounded-full h-6 w-20"></div>
+                  </div>
+                  <div className="bg-pink-700 h-4 rounded mb-3"></div>
+                  <div className="bg-pink-700 h-4 rounded mb-3 w-3/4"></div>
+                  <div className="bg-pink-700 h-4 rounded w-1/2"></div>
                 </div>
-                <p className="text-pink-100 mb-3">{location.address}</p>
-                <p className="font-medium mb-3">Contact: {location.contact}</p>
-                <a
-                  href={location.mapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-yellow-300 hover:text-yellow-200 text-sm font-medium flex items-center gap-1"
-                >
-                  <FaMapMarkerAlt /> View Location
-                </a>
-              </div>
-            ))}
+              ))
+            ) : (
+              coachingCenters.map((center) => (
+                <div key={center.id} className="bg-pink-800 p-5 rounded-lg shadow-sm">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="bg-yellow-400 text-black px-3 py-1 rounded-full font-bold text-sm">
+                      #{center.city}
+                    </span>
+                  </div>
+                  <p className="text-pink-100 mb-3">{center.address}</p>
+                  <p className="font-medium mb-3">Contact: {center.mobileNo}</p>
+                  <a
+                    href={center.mapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-yellow-300 hover:text-yellow-200 text-sm font-medium flex items-center gap-1"
+                  >
+                    <FaMapMarkerAlt /> View Location
+                  </a>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
