@@ -80,9 +80,9 @@ const BlogPanel: React.FC<BlogPanelProps> = ({
             {title}
           </h2>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600">
+            {/* <span className="text-sm text-gray-600">
               {filteredBlogs.length} {filteredBlogs.length === 1 ? 'article' : 'articles'}
-            </span>
+            </span> */}
             <LayoutToggle
               currentLayout={layoutType}
               onLayoutChange={setLayoutType}

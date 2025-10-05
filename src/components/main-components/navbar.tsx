@@ -12,13 +12,12 @@ function Navbar() {
   };
 
   const topNavLinks = [
-    { href: "/notes", label: "Notes" },
-    { href: "/prelims-tests", label: "Prelims Tests" },
-    { href: "/mains-tests", label: "Mains Tests" },
-    { href: "/video-courses", label: "Video Courses" },
-    { href: "/optionals", label: "Optionals" },
-    { href: "/offline", label: "Offline" },
-    { href: "/pcs", label: "PCS" },
+    { href: "https://www.sunyaiashindi.com/notes", label: "Notes" },
+    { href: "https://www.sunyaiashindi.com/prelims-tests", label: "Prelims Tests" },
+    { href: "https://www.sunyaiashindi.com/mains-tests", label: "Mains Tests" },
+    { href: "https://www.sunyaiashindi.com/video-courses", label: "Video Courses" },
+    { href: "https://www.sunyaiashindi.com/optionals", label: "Optionals" },
+    { href: "https://www.sunyaiashindi.com/pcs", label: "PCS" },
   ];
 
   // const bottomNavLinks = [

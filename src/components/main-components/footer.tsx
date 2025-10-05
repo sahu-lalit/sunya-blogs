@@ -127,12 +127,12 @@ function Footer() {
             <h3 className="text-lg font-bold mb-6 pb-2 border-b border-pink-600">Quick Links</h3>
             <ul className="space-y-3">
               {[
-                { name: "Notes", path: "/notes" },
-                { name: "Prelims Tests", path: "/prelims_tests" },
-                { name: "Mains Tests", path: "/mains_tests" },
-                { name: "Video Courses", path: "/video_courses" },
-                { name: "Optionals", path: "/optionals" },
-                { name: "PCS", path: "/pcs" }
+                { name: "Notes", path: "https://www.sunyaiashindi.com/notes" },
+                { name: "Prelims Tests", path: "https://www.sunyaiashindi.com/prelims-tests" },
+                { name: "Mains Tests", path: "https://www.sunyaiashindi.com/mains-tests" },
+                { name: "Video Courses", path: "https://www.sunyaiashindi.com/video-courses" },
+                { name: "Optionals", path: "https://www.sunyaiashindi.com/optionals" },
+                { name: "PCS", path: "https://www.sunyaiashindi.com/pcs" }
               ].map((item) => (
                 <li key={item.name}>
                   <Link href={item.path} className="text-pink-100 hover:text-white transition-colors">
@@ -148,10 +148,10 @@ function Footer() {
             <h3 className="text-lg font-bold mb-6 pb-2 border-b border-pink-600">About Us</h3>
             <ul className="space-y-3">
               {[
-                { name: 'Privacy Policy', path: '/privacy-policy', icon: <FaUserShield /> },
-                { name: 'Terms & Conditions', path: '/terms-conditions', icon: <FaFileContract /> },
+                { name: 'Privacy Policy', path: 'https://www.sunyaiashindi.com/privacy-policy', icon: <FaUserShield /> },
+                { name: 'Terms & Conditions', path: 'https://www.sunyaiashindi.com/terms-conditions', icon: <FaFileContract /> },
                 { name: 'Careers', path: 'https://forms.gle/SYVkyDJW9rMo4pRw7', icon: <FaBriefcase /> },
-                { name: 'Refund Policy', path: '/refund-policy', icon: <FaUndoAlt /> },
+                { name: 'Refund Policy', path: 'https://www.sunyaiashindi.com/refund-policy', icon: <FaUndoAlt /> },
               ].map((item) => (
                 <li key={item.name} className="flex items-start gap-2">
                   <span className="mt-1 text-pink-200 flex-shrink-0">{item.icon}</span>
@@ -272,9 +272,9 @@ function Footer() {
         <div className="container mx-auto px-6">
           <p>© {new Date().getFullYear()} Sunya Notes Private limited. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-3">
-            <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
-            <Link href="/terms-conditions" className="hover:text-white">Terms & Conditions</Link>
-            <Link href="/refund-policy" className="hover:text-white">Refund Policy</Link>
+            <Link href="https://www.sunyaiashindi.com/privacy-policy" className="hover:text-white">Privacy Policy</Link>
+            <Link href="https://www.sunyaiashindi.com/terms-conditions" className="hover:text-white">Terms & Conditions</Link>
+            <Link href="https://www.sunyaiashindi.com/refund-policy" className="hover:text-white">Refund Policy</Link>
           </div>
           {/* <p className="mt-2 text-xs text-gray-500">Registered Brand Name "Sunya IAS" and Company name "Sunya Notes Private Limited"</p> */}
         </div>

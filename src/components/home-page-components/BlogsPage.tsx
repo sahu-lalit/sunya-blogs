@@ -25,6 +25,32 @@ const BlogsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Navigation Buttons */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-wrap justify-center gap-4">
+            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
+              Current Affairs
+            </button>
+            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
+              History & Culture
+            </button>
+            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
+              Geography
+            </button>
+            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
+              Polity & Governance
+            </button>
+            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
+              Economy
+            </button>
+            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
+              Science & Technology
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Two Panel Layout */}
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
