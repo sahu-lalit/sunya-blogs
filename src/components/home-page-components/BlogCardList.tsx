@@ -33,28 +33,45 @@ const BlogCardList: React.FC<BlogCardListProps> = ({ blog, onClick, className = 
       onClick={handleClick}
       style={{ fontFamily: 'Poppins-Medium, sans-serif' }}
     >
-      {/* Blog Image */}
-      <div className="relative w-full sm:w-32 h-32 sm:h-24 flex-shrink-0">
-        <Image
-          src={blog.imageUrl}
-          alt={blog.title}
-          fill
-          className="object-cover rounded-lg"
-          priority={false}
-        />
-        {blog.isPopular && (
-          <div className="absolute -top-2 -right-2 bg-[#FBC158] text-[#AA1650] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-            <FaStar className="w-3 h-3" />
+      {/* Blog Image - Only render if imageUrl exists */}
+      {blog.imageUrl && blog.imageUrl.trim() !== '' && (
+        <div className="relative w-full sm:w-32 h-32 sm:h-24 flex-shrink-0">
+          <Image
+            src={blog.imageUrl}
+            alt={blog.title}
+            fill
+            className="object-cover rounded-lg"
+            priority={false}
+          />
+          {blog.isPopular && (
+            <div className="absolute -top-2 -right-2 bg-[#FBC158] text-[#AA1650] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+              <FaStar className="w-3 h-3" />
+            </div>
+          )}
+          <div className="absolute top-1 left-1 bg-[#AA1650] text-white px-2 py-1 rounded-full text-xs font-medium">
+            {blog.type.charAt(0).toUpperCase() + blog.type.slice(1)}
           </div>
-        )}
-        <div className="absolute top-1 left-1 bg-[#AA1650] text-white px-2 py-1 rounded-full text-xs font-medium">
-          {blog.type.charAt(0).toUpperCase() + blog.type.slice(1)}
         </div>
-      </div>
+      )}
 
       {/* Blog Content */}
       <div className="flex-1 flex flex-col justify-between min-w-0">
         <div>
+          {/* Header section for cards without images */}
+          {(!blog.imageUrl || blog.imageUrl.trim() === '') && (
+            <div className="flex items-center justify-between mb-3">
+              <div className="bg-[#AA1650] text-white px-2 py-1 rounded-full text-xs font-medium">
+                {blog.type.charAt(0).toUpperCase() + blog.type.slice(1)}
+              </div>
+              {blog.isPopular && (
+                <div className="bg-[#FBC158] text-[#AA1650] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                  <FaStar className="w-3 h-3" />
+                  Popular
+                </div>
+              )}
+            </div>
+          )}
+          
           {/* Title */}
           <h3 className="text-lg font-bold text-[#AA1650] mb-2 line-clamp-2 hover:text-[#8a1340] transition-colors">
             {blog.title}

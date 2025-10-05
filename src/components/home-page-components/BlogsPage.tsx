@@ -2,26 +2,29 @@
 
 import React, { useState, useEffect } from 'react';
 import BlogPanel from './BlogPanel';
-import { categories, dummyBlogs } from '../../data/blogData';
-import { fetchBlogsBanner, fetchMenuButtons } from '../../utils/api';
-import { BlogBanner, MenuButton } from '../../types/blog';
+import { fetchBlogsBanner, fetchMenuButtons, fetchBlogCategories } from '../../utils/api';
+import { BlogBanner, MenuButton, ApiCategory } from '../../types/blog';
 
 const BlogsPage: React.FC = () => {
   const [bannerData, setBannerData] = useState<BlogBanner | null>(null);
   const [menuButtons, setMenuButtons] = useState<MenuButton[]>([]);
+  const [categories, setCategories] = useState<ApiCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isMenuLoading, setIsMenuLoading] = useState(true);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setIsLoading(true);
         setIsMenuLoading(true);
+        setIsCategoriesLoading(true);
         
-        // Load banner and menu data in parallel
-        const [bannerResponse, menuResponse] = await Promise.all([
+        // Load banner, menu and categories data in parallel
+        const [bannerResponse, menuResponse, categoriesResponse] = await Promise.all([
           fetchBlogsBanner(),
-          fetchMenuButtons()
+          fetchMenuButtons(),
+          fetchBlogCategories()
         ]);
         
         // Set banner data
@@ -34,12 +37,17 @@ const BlogsPage: React.FC = () => {
         const activeButtons = menuResponse.blogsMenuButtons.filter(button => button.is_active === 1);
         setMenuButtons(activeButtons);
         
+        // Set categories data (only active ones)
+        const activeCategories = categoriesResponse.blogsCategories.filter(category => category.is_active === 1);
+        setCategories(activeCategories);
+        
       } catch (error) {
         console.error('Failed to load data:', error);
         // Keep default content if API fails
       } finally {
         setIsLoading(false);
         setIsMenuLoading(false);
+        setIsCategoriesLoading(false);
       }
     };
 
@@ -109,31 +117,48 @@ const BlogsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Two Panel Layout */}
+      {/* Dynamic Category Panels Layout */}
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Prelims Panel */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 h-[800px]">
-            <BlogPanel
-              title="Prelims Articles"
-              blogs={dummyBlogs}
-              categories={categories}
-              type="prelims"
-              className="h-full"
-            />
+        {isCategoriesLoading ? (
+          // Loading skeleton for panels
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {Array.from({ length: 2 }, (_, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 h-[800px] animate-pulse"
+              >
+                <div className="p-6 border-b border-gray-200">
+                  <div className="h-8 bg-gray-300 rounded mb-4"></div>
+                  <div className="h-12 bg-gray-300 rounded"></div>
+                </div>
+                <div className="p-6 space-y-4">
+                  {Array.from({ length: 3 }, (_, i) => (
+                    <div key={i} className="h-32 bg-gray-200 rounded"></div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
-
-          {/* Mains Panel */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 h-[800px]">
-            <BlogPanel
-              title="Mains Articles"
-              blogs={dummyBlogs}
-              categories={categories}
-              type="mains"
-              className="h-full"
-            />
+        ) : (
+          <div className={`grid gap-8 ${
+            categories.length === 1 ? 'grid-cols-1 max-w-4xl mx-auto' : 
+            categories.length === 2 ? 'grid-cols-1 lg:grid-cols-2' :
+            'grid-cols-1 lg:grid-cols-2'
+          }`}>
+            {categories.map((category) => (
+              <div 
+                key={category.id} 
+                className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 h-[800px]"
+              >
+                <BlogPanel
+                  title={category.name}
+                  categoryId={category.id}
+                  className="h-full"
+                />
+              </div>
+            ))}
           </div>
-        </div>
+        )}
       </div>
 
       {/* Statistics Section */}

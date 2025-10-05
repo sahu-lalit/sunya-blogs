@@ -33,28 +33,47 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, onClick, className = '' }) =>
       onClick={handleClick}
       style={{ fontFamily: 'Poppins-Medium, sans-serif' }}
     >
-      {/* Blog Image */}
-      <div className="relative h-48 w-full">
-        <Image
-          src={blog.imageUrl}
-          alt={blog.title}
-          fill
-          className="object-cover rounded-t-lg"
-          priority={false}
-        />
-        {blog.isPopular && (
-          <div className="absolute top-3 right-3 bg-[#FBC158] text-[#AA1650] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-            <FaStar className="w-3 h-3" />
-            Popular
+      {/* Blog Image - Only render if imageUrl exists */}
+      {blog.imageUrl && blog.imageUrl.trim() !== '' && (
+        <div className="relative h-48 w-full">
+          <Image
+            src={blog.imageUrl}
+            alt={blog.title}
+            fill
+            className="object-cover rounded-t-lg"
+            priority={false}
+          />
+          {blog.isPopular && (
+            <div className="absolute top-3 right-3 bg-[#FBC158] text-[#AA1650] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+              <FaStar className="w-3 h-3" />
+              Popular
+            </div>
+          )}
+          <div className="absolute top-3 left-3 bg-[#AA1650] text-white px-3 py-1 rounded-full text-xs font-medium">
+            {blog.type.charAt(0).toUpperCase() + blog.type.slice(1)}
           </div>
-        )}
-        <div className="absolute top-3 left-3 bg-[#AA1650] text-white px-3 py-1 rounded-full text-xs font-medium">
-          {blog.type.charAt(0).toUpperCase() + blog.type.slice(1)}
         </div>
-      </div>
+      )}
+
+      {/* Header section for cards without images */}
+      {(!blog.imageUrl || blog.imageUrl.trim() === '') && (
+        <div className="p-5 pb-2">
+          <div className="flex items-center justify-between mb-3">
+            <div className="bg-[#AA1650] text-white px-3 py-1 rounded-full text-xs font-medium">
+              {blog.type.charAt(0).toUpperCase() + blog.type.slice(1)}
+            </div>
+            {blog.isPopular && (
+              <div className="bg-[#FBC158] text-[#AA1650] px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                <FaStar className="w-3 h-3" />
+                Popular
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Blog Content */}
-      <div className="p-5">
+      <div className={blog.imageUrl && blog.imageUrl.trim() !== '' ? "p-5" : "px-5 pb-5"}>
         {/* Title */}
         <h3 className="text-lg font-bold text-[#AA1650] mb-2 line-clamp-2 hover:text-[#8a1340] transition-colors">
           {blog.title}

@@ -1,6 +1,6 @@
 // API utility functions for the Sunya IAS application
 import { API_ENDPOINTS } from './constants';
-import { BlogBannerResponse, MenuButtonsResponse } from '../types/blog';
+import { BlogBannerResponse, MenuButtonsResponse, ApiCategoryResponse, ApiSubcategoryResponse, ApiBlogArticlesResponse, ApiBlogArticle, Blog, SingleArticleResponse } from '../types/blog';
 
 interface SubscriptionEnquiryForm {
   name: string;
@@ -116,5 +116,158 @@ export async function fetchMenuButtons(): Promise<MenuButtonsResponse> {
       ],
       status: 200
     };
+  }
+}
+
+// Helper function to convert API article to Blog interface
+export function convertApiBlogToBlog(apiArticle: ApiBlogArticle): Blog {
+  // Extract tags as simple string array
+  const tags = apiArticle.tags.map(tagObj => tagObj.tag.name);
+  
+  // Create excerpt from content (removing HTML tags and limiting length)
+  const excerpt = apiArticle.content
+    .replace(/<[^>]*>/g, '') // Remove HTML tags
+    .substring(0, 150) + (apiArticle.content.length > 150 ? '...' : '');
+  
+  return {
+    id: apiArticle.id.toString(),
+    title: apiArticle.title,
+    excerpt: excerpt,
+    content: apiArticle.content,
+    imageUrl: '', // API doesn't provide image URL, using empty string
+    author: apiArticle.author,
+    publishedDate: apiArticle.created_at,
+    readTime: apiArticle.minuteRead,
+    categoryId: apiArticle.blogsCategoryId.toString(),
+    subcategoryId: apiArticle.blogsSubCategoryId.toString(),
+    type: 'prelims', // Default to prelims, you can modify this logic as needed
+    tags: tags,
+    isPopular: apiArticle.setPopular === 1
+  };
+}
+
+// Fetch blog categories
+export async function fetchBlogCategories(): Promise<ApiCategoryResponse> {
+  try {
+    const response = await fetch(API_ENDPOINTS.BLOGS_CATEGORIES, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImNvbnRhY3ROdW1iZXIiOiI4Nzg4NTA2NjUwIiwiaWF0IjoxNzQ3NjUzNDUzLCJleHAiOjE3NDc2OTY2NTN9.8nfbkPJ8EHe5nL3-F4-JUZ5L2xGhSSNLtix63s75Ozo'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data: ApiCategoryResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching blog categories:', error);
+    // Return fallback data in case of error
+    return {
+      blogsCategories: [
+        {
+          id: 1,
+          name: "General Studies",
+          slug: "general-studies",
+          is_active: 1,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          name: "Current Affairs",
+          slug: "current-affairs",
+          is_active: 1,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      ],
+      status: 200
+    };
+  }
+}
+
+// Fetch blog subcategories for a specific category
+export async function fetchBlogSubcategories(categoryId: number): Promise<ApiSubcategoryResponse> {
+  try {
+    const response = await fetch(`${API_ENDPOINTS.BLOGS_SUBCATEGORIES}?categoryId=${categoryId}`, {
+      method: 'GET',
+      headers: {}
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data: ApiSubcategoryResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching blog subcategories:', error);
+    // Return fallback data in case of error
+    return {
+      blogsSubCategories: [],
+      status: 200
+    };
+  }
+}
+
+// Fetch blog articles with optional filters
+export async function fetchBlogArticles(categoryId?: number, subCategoryId?: number): Promise<ApiBlogArticlesResponse> {
+  try {
+    // Build query parameters
+    const params = new URLSearchParams();
+    if (categoryId) {
+      params.append('categoryId', categoryId.toString());
+    }
+    if (subCategoryId) {
+      params.append('subCategoryId', subCategoryId.toString());
+    }
+    
+    const url = `${API_ENDPOINTS.BLOGS_ARTICLES}${params.toString() ? '?' + params.toString() : ''}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {}
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data: ApiBlogArticlesResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching blog articles:', error);
+    // Return fallback data in case of error
+    return {
+      responseResult: [],
+      totalCount: 0,
+      totalPages: 0,
+      perPage: 10,
+      status: 200
+    };
+  }
+}
+
+// Fetch a single blog article by ID
+export async function fetchSingleBlogArticle(articleId: number): Promise<SingleArticleResponse> {
+  try {
+    const response = await fetch(`${API_ENDPOINTS.SINGLE_BLOG_ARTICLE}/${articleId}`, {
+      method: 'GET',
+      headers: {}
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data: SingleArticleResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching single blog article:', error);
+    // Return fallback data in case of error
+    throw error;
   }
 }

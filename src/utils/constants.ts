@@ -5,6 +5,10 @@ export const API_BASE_URL = 'https://admin.sunyaiashindi.com/api/v1';
 export const API_ENDPOINTS = {
   BLOGS_BANNER: `${API_BASE_URL}/blogs/banner`,
   MENU_BUTTONS: `${API_BASE_URL}/blogs/menu-buttons`,
+  BLOGS_CATEGORIES: `${API_BASE_URL}/blogs/category`,
+  BLOGS_SUBCATEGORIES: `${API_BASE_URL}/blogs/sub-category`,
+  BLOGS_ARTICLES: `${API_BASE_URL}/blogs/article`,
+  SINGLE_BLOG_ARTICLE: `${API_BASE_URL}/blogs/article`,
   // Add other endpoints here as needed
 } as const;
 
