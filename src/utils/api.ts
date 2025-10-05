@@ -1,4 +1,6 @@
 // API utility functions for the Sunya IAS application
+import { API_ENDPOINTS } from './constants';
+import { BlogBannerResponse, MenuButtonsResponse } from '../types/blog';
 
 interface SubscriptionEnquiryForm {
   name: string;
@@ -58,5 +60,61 @@ export async function sendSubscriptionEnquiry(formData: SubscriptionEnquiryForm)
       throw new Error(error.message);
     }
     throw new Error('Something went wrong. Please try again.');
+  }
+}
+
+// Fetch blogs banner content for the page header
+export async function fetchBlogsBanner(): Promise<BlogBannerResponse> {
+  try {
+    const response = await fetch(API_ENDPOINTS.BLOGS_BANNER);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data: BlogBannerResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching blogs banner:', error);
+    // Return fallback data in case of error
+    return {
+      blogsBanners: [{
+        id: 1,
+        title: "Sunya IAS Blog",
+        content: "Comprehensive educational resources for UPSC aspirants. Explore our carefully curated articles on various subjects to enhance your preparation for both Prelims and Mains examinations.",
+        is_active: 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }],
+      status: 200
+    };
+  }
+}
+
+// Fetch menu buttons for navigation
+export async function fetchMenuButtons(): Promise<MenuButtonsResponse> {
+  try {
+    const response = await fetch(API_ENDPOINTS.MENU_BUTTONS);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data: MenuButtonsResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching menu buttons:', error);
+    // Return fallback data in case of error
+    return {
+      blogsMenuButtons: [
+        { id: 1, name: "Current Affairs", redirect_url: "#", is_active: 1, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+        { id: 2, name: "History & Culture", redirect_url: "#", is_active: 1, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+        { id: 3, name: "Geography", redirect_url: "#", is_active: 1, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+        { id: 4, name: "Polity & Governance", redirect_url: "#", is_active: 1, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+        { id: 5, name: "Economy", redirect_url: "#", is_active: 1, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+        { id: 6, name: "Science & Technology", redirect_url: "#", is_active: 1, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+      ],
+      status: 200
+    };
   }
 }

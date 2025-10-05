@@ -1,10 +1,57 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import BlogPanel from './BlogPanel';
 import { categories, dummyBlogs } from '../../data/blogData';
+import { fetchBlogsBanner, fetchMenuButtons } from '../../utils/api';
+import { BlogBanner, MenuButton } from '../../types/blog';
 
 const BlogsPage: React.FC = () => {
+  const [bannerData, setBannerData] = useState<BlogBanner | null>(null);
+  const [menuButtons, setMenuButtons] = useState<MenuButton[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMenuLoading, setIsMenuLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        setIsMenuLoading(true);
+        
+        // Load banner and menu data in parallel
+        const [bannerResponse, menuResponse] = await Promise.all([
+          fetchBlogsBanner(),
+          fetchMenuButtons()
+        ]);
+        
+        // Set banner data
+        const activeBanner = bannerResponse.blogsBanners.find(banner => banner.is_active === 1);
+        if (activeBanner) {
+          setBannerData(activeBanner);
+        }
+        
+        // Set menu buttons data (only active ones)
+        const activeButtons = menuResponse.blogsMenuButtons.filter(button => button.is_active === 1);
+        setMenuButtons(activeButtons);
+        
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        // Keep default content if API fails
+      } finally {
+        setIsLoading(false);
+        setIsMenuLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  const handleButtonClick = (redirectUrl: string) => {
+    if (redirectUrl && redirectUrl !== '#') {
+      window.open(redirectUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <div 
       className="min-h-screen bg-gray-50"
@@ -14,13 +61,23 @@ const BlogsPage: React.FC = () => {
       <div className="bg-white shadow-sm border-b border-[#FBC158]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-[#AA1650] mb-4">
-              Sunya IAS Blog
-            </h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Comprehensive educational resources for UPSC aspirants. Explore our carefully curated 
-              articles on various subjects to enhance your preparation for both Prelims and Mains examinations.
-            </p>
+            {isLoading ? (
+              <div className="animate-pulse">
+                <div className="h-10 bg-gray-300 rounded mb-4 max-w-md mx-auto"></div>
+                <div className="h-6 bg-gray-300 rounded max-w-3xl mx-auto"></div>
+              </div>
+            ) : (
+              <>
+                <h1 className="text-4xl font-bold text-[#AA1650] mb-4">
+                  {bannerData?.title || 'Sunya IAS Blog'}
+                </h1>
+                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                  {bannerData?.content || 
+                    'Comprehensive educational resources for UPSC aspirants. Explore our carefully curated articles on various subjects to enhance your preparation for both Prelims and Mains examinations.'
+                  }
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -29,24 +86,25 @@ const BlogsPage: React.FC = () => {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
-              Current Affairs
-            </button>
-            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
-              History & Culture
-            </button>
-            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
-              Geography
-            </button>
-            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
-              Polity & Governance
-            </button>
-            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
-              Economy
-            </button>
-            <button className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2">
-              Science & Technology
-            </button>
+            {isMenuLoading ? (
+              // Loading skeleton for buttons
+              Array.from({ length: 6 }, (_, index) => (
+                <div
+                  key={index}
+                  className="h-12 w-40 bg-gray-300 rounded-full animate-pulse"
+                ></div>
+              ))
+            ) : (
+              menuButtons.map((button) => (
+                <button
+                  key={button.id}
+                  onClick={() => handleButtonClick(button.redirect_url)}
+                  className="px-6 py-3 text-[#AA1650] font-medium rounded-full border-2 border-[#AA1650] hover:bg-[#AA1650] hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FBC158] focus:ring-offset-2 cursor-pointer"
+                >
+                  {button.name}
+                </button>
+              ))
+            )}
           </div>
         </div>
       </div>

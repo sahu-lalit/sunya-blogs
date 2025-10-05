@@ -30,3 +30,31 @@ export interface FilterState {
   category: string;
   subcategory: string;
 }
+
+export interface BlogBanner {
+  id: number;
+  title: string;
+  content: string;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BlogBannerResponse {
+  blogsBanners: BlogBanner[];
+  status: number;
+}
+
+export interface MenuButton {
+  id: number;
+  name: string;
+  redirect_url: string;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MenuButtonsResponse {
+  blogsMenuButtons: MenuButton[];
+  status: number;
+}
