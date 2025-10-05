@@ -53,7 +53,7 @@ const BlogsPage: React.FC = () => {
       </div>
 
       {/* Statistics Section */}
-      <div className="bg-[#AA1650] text-white py-12">
+      {/* <div className="bg-[#AA1650] text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
@@ -82,10 +82,10 @@ const BlogsPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Featured Categories */}
-      <div className="bg-white py-16">
+      {/* <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-[#AA1650] mb-4">
@@ -115,7 +115,7 @@ const BlogsPage: React.FC = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

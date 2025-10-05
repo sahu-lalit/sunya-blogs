@@ -3,7 +3,9 @@
 import React, { useState, useMemo } from 'react';
 import { Blog, Category, FilterState } from '../../types/blog';
 import BlogCard from './BlogCard';
+import BlogCardList from './BlogCardList';
 import FilterComponent from './FilterComponent';
+import LayoutToggle, { LayoutType } from './LayoutToggle';
 import { FaSearch, FaFilter } from 'react-icons/fa';
 
 interface BlogPanelProps {
@@ -27,6 +29,7 @@ const BlogPanel: React.FC<BlogPanelProps> = ({
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [layoutType, setLayoutType] = useState<LayoutType>('grid');
 
   // Filter blogs based on type, search term, and filters
   const filteredBlogs = useMemo(() => {
@@ -76,10 +79,15 @@ const BlogPanel: React.FC<BlogPanelProps> = ({
           >
             {title}
           </h2>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <span className="text-sm text-gray-600">
               {filteredBlogs.length} {filteredBlogs.length === 1 ? 'article' : 'articles'}
             </span>
+            <LayoutToggle
+              currentLayout={layoutType}
+              onLayoutChange={setLayoutType}
+              className="hidden sm:flex"
+            />
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="lg:hidden p-2 text-[#AA1650] hover:bg-[#FBC158] hover:bg-opacity-20 rounded-lg transition-colors"
@@ -99,6 +107,15 @@ const BlogPanel: React.FC<BlogPanelProps> = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-[#FBC158] rounded-lg focus:ring-2 focus:ring-[#FBC158] focus:border-transparent outline-none"
             style={{ fontFamily: 'Poppins-Medium, sans-serif' }}
+          />
+        </div>
+
+        {/* Mobile Layout Toggle */}
+        <div className="sm:hidden mb-4">
+          <LayoutToggle
+            currentLayout={layoutType}
+            onLayoutChange={setLayoutType}
+            className="w-fit"
           />
         </div>
 
@@ -142,17 +159,29 @@ const BlogPanel: React.FC<BlogPanelProps> = ({
         )}
       </div>
 
-      {/* Blog Grid - Scrollable Content */}
+      {/* Blog Grid/List - Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-6">
         {filteredBlogs.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className={
+            layoutType === 'grid' 
+              ? "grid grid-cols-1 lg:grid-cols-2 gap-6" 
+              : "space-y-3"
+          }>
             {filteredBlogs.map((blog) => (
-              <BlogCard
-                key={blog.id}
-                blog={blog}
-                onClick={handleBlogClick}
-                className="h-fit"
-              />
+              layoutType === 'grid' ? (
+                <BlogCard
+                  key={blog.id}
+                  blog={blog}
+                  onClick={handleBlogClick}
+                  className="h-fit"
+                />
+              ) : (
+                <BlogCardList
+                  key={blog.id}
+                  blog={blog}
+                  onClick={handleBlogClick}
+                />
+              )
             ))}
           </div>
         ) : (
