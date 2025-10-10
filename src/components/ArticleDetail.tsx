@@ -37,6 +37,36 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId }) => {
     }
   }, [articleId]);
 
+  // Prevent copy, cut, and right-click
+  useEffect(() => {
+    const preventCopy = (e: ClipboardEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const preventContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const preventSelection = (e: Event) => {
+      e.preventDefault();
+      return false;
+    };
+
+    document.addEventListener('copy', preventCopy);
+    document.addEventListener('cut', preventCopy);
+    document.addEventListener('contextmenu', preventContextMenu);
+    document.addEventListener('selectstart', preventSelection);
+
+    return () => {
+      document.removeEventListener('copy', preventCopy);
+      document.removeEventListener('cut', preventCopy);
+      document.removeEventListener('contextmenu', preventContextMenu);
+      document.removeEventListener('selectstart', preventSelection);
+    };
+  }, []);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -95,7 +125,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50" style={{ fontFamily: 'Poppins-Medium, sans-serif' }}>
+    <div className="min-h-screen bg-gray-50 select-none" style={{ fontFamily: 'Poppins-Medium, sans-serif', userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none', msUserSelect: 'none' }}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <button
@@ -177,7 +207,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId }) => {
         )}
 
         {/* YouTube Video */}
-        {article.youtubeVideoLink && (
+        {article.youtubeVideoLink && article.youtubeVideoLink.trim() !== '' && (
           <div className="mb-8">
             <div className="bg-white rounded-lg shadow-lg p-6">
               <div className="flex items-center gap-2 mb-4">

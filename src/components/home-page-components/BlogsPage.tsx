@@ -57,6 +57,36 @@ const BlogsPage: React.FC = () => {
     loadData();
   }, []);
 
+  // Prevent copy, cut, and right-click
+  useEffect(() => {
+    const preventCopy = (e: ClipboardEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const preventContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const preventSelection = (e: Event) => {
+      e.preventDefault();
+      return false;
+    };
+
+    document.addEventListener('copy', preventCopy);
+    document.addEventListener('cut', preventCopy);
+    document.addEventListener('contextmenu', preventContextMenu);
+    document.addEventListener('selectstart', preventSelection);
+
+    return () => {
+      document.removeEventListener('copy', preventCopy);
+      document.removeEventListener('cut', preventCopy);
+      document.removeEventListener('contextmenu', preventContextMenu);
+      document.removeEventListener('selectstart', preventSelection);
+    };
+  }, []);
+
   const handleButtonClick = (redirectUrl: string) => {
     console.log('handleButtonClick called with URL:', redirectUrl);
     console.log('URL type:', typeof redirectUrl);
@@ -84,8 +114,8 @@ const BlogsPage: React.FC = () => {
 
   return (
     <div 
-      className="min-h-screen bg-gray-50"
-      style={{ fontFamily: 'Poppins-Medium, sans-serif' }}
+      className="min-h-screen bg-gray-50 select-none"
+      style={{ fontFamily: 'Poppins-Medium, sans-serif', userSelect: 'none', WebkitUserSelect: 'none', MozUserSelect: 'none', msUserSelect: 'none' }}
     >
       {/* Page Header */}
       <div className="bg-white shadow-sm border-b border-[#FBC158]">
